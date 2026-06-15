@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蘇州六日 · 以貓喻城</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500&family=Ma+Shan+Zheng&display=swap');
+        :root {
+            --ink: #2a2a2a; --ink-soft: #555; --paper: #f6f0e1; --paper-warm: #ede4cf;
+            --paper-pale: #faf6ea; --vermillion: #b8332b; --jade: #4a7c6f; --gold: #b8924a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body { font-family: 'Noto Serif TC', 'Songti TC', 'Georgia', serif; color: var(--ink); background: var(--paper); overflow-x: hidden; line-height: 1.9; }
+        body::before { content: ''; position: fixed; inset: 0; z-index: -1; background:
+            radial-gradient(circle at 20% 30%, rgba(184,146,74,0.04) 0%, transparent 40%),
+            radial-gradient(circle at 80% 70%, rgba(184,51,43,0.03) 0%, transparent 40%),
+            var(--paper); pointer-events: none; }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(246,240,225,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(42,42,42,0.08); }
+        nav .nav-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; }
+        nav .brand { font-family: 'Ma Shan Zheng', serif; font-size: 1.3rem; color: var(--vermillion); letter-spacing: 4px; }
+        nav .links { display: flex; gap: 18px; list-style: none; flex-wrap: wrap; }
+        nav .links a { text-decoration: none; color: var(--ink-soft); font-size: 0.72rem; letter-spacing: 2px; font-family: 'Noto Sans TC', sans-serif; transition: color 0.3s; }
+        nav .links a:hover { color: var(--vermillion); }
+
+        .hero { position: relative; height: 100vh; min-height: 620px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .hero-bg { position: absolute; inset: 0; }
+        .hero-bg img { width: 100%; height: 100%; object-fit: cover; animation: kenBurns 30s ease-in-out infinite alternate; }
+        @keyframes kenBurns { 0% { transform: scale(1) translate(0,0); } 100% { transform: scale(1.1) translate(-1%, -0.8%); } }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(42,42,42,0.2) 0%, rgba(42,42,42,0.4) 60%, rgba(42,42,42,0.75) 100%); }
+        .hero-content { position: relative; z-index: 2; text-align: center; color: #fff; padding: 0 24px; }
+        .hero-content .ch-title { font-family: 'Ma Shan Zheng', serif; font-size: clamp(3rem, 8vw, 5.5rem); letter-spacing: 12px; margin-bottom: 20px; text-shadow: 0 4px 30px rgba(0,0,0,0.5); animation: fadeInUp 1.4s ease-out; }
+        .hero-content .sub { font-size: clamp(0.95rem, 2vw, 1.25rem); font-weight: 300; letter-spacing: 6px; opacity: 0.92; animation: fadeInUp 1.4s ease-out 0.4s both; }
+        .hero-content .divider { width: 80px; height: 1px; background: var(--gold); margin: 28px auto; animation: fadeInUp 1.4s ease-out 0.6s both; }
+        .hero-content .seal { display: inline-block; margin-top: 12px; padding: 8px 18px; border: 1px solid rgba(255,255,255,0.5); font-family: 'Noto Sans TC', sans-serif; font-size: 0.7rem; letter-spacing: 4px; opacity: 0.85; animation: fadeInUp 1.4s ease-out 0.8s both; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .preface { max-width: 760px; margin: 0 auto; padding: 120px 32px 80px; text-align: center; }
+        .preface .quote { font-size: clamp(1.2rem, 2.4vw, 1.55rem); font-weight: 400; line-height: 2.2; color: var(--ink); letter-spacing: 3px; margin-bottom: 32px; }
+        .preface .quote .em { color: var(--vermillion); font-weight: 500; }
+        .preface .attribution { font-family: 'Noto Sans TC', sans-serif; font-size: 0.75rem; color: var(--ink-soft); letter-spacing: 4px; }
+        .preface .attribution::before, .preface .attribution::after { content: '——'; color: var(--gold); margin: 0 8px; }
+
+        .chapter { padding: 80px 32px; max-width: 1280px; margin: 0 auto; position: relative; }
+        .chapter-head { margin-bottom: 56px; }
+        .chapter-num { font-family: 'Noto Sans TC', sans-serif; font-size: 0.7rem; letter-spacing: 6px; color: var(--vermillion); margin-bottom: 8px; }
+        .chapter-title { font-size: clamp(1.8rem, 4.2vw, 2.8rem); font-weight: 600; letter-spacing: 6px; line-height: 1.3; margin-bottom: 14px; }
+        .chapter-sub { font-size: 0.95rem; color: var(--ink-soft); font-weight: 300; letter-spacing: 3px; }
+        .chapter-prose { font-size: 1.05rem; line-height: 2.1; color: var(--ink-soft); max-width: 720px; font-weight: 300; }
+        .chapter-prose .em { color: var(--vermillion); font-weight: 500; }
+        .chapter-prose .soft { color: var(--jade); }
+
+        /* 圖文交錯版式：文繞圖 / 圖繞文 */
+        .flow { display: grid; gap: 32px; margin: 56px 0; }
+        .flow-item { display: grid; align-items: center; gap: 40px; }
+        .flow-item.text-left { grid-template-columns: 1fr 1.1fr; }
+        .flow-item.text-right { grid-template-columns: 1.1fr 1fr; }
+        .flow-item .text-col { font-size: 1.02rem; line-height: 2.1; color: var(--ink-soft); }
+        .flow-item .text-col p { margin-bottom: 16px; }
+        .flow-item .text-col .pull { font-family: 'Ma Shan Zheng', serif; font-size: 1.6rem; color: var(--vermillion); line-height: 1.4; padding-left: 16px; border-left: 3px solid var(--gold); margin: 16px 0 20px; }
+
+        /* 不規則照片版式 - 白框融入紙面 */
+        .photo { position: relative; overflow: hidden; background: #fff; padding: 6px; box-sizing: border-box; }
+        .photo img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .photo:hover img { transform: scale(1.02); }
+        .photo .cap { position: absolute; bottom: 14px; left: 14px; right: 14px; padding: 8px 12px; background: rgba(246,240,225,0.9); color: var(--ink-soft); font-size: 0.72rem; letter-spacing: 2px; font-family: 'Noto Sans TC', sans-serif; opacity: 0; transition: opacity 0.5s; backdrop-filter: blur(4px); }
+        .photo:hover .cap { opacity: 1; }
+        /* 水墨風 filter（給贰章蘇博+蘭草用） */
+        .photo.ink img { filter: grayscale(0.55) contrast(1.08) brightness(1.04) sepia(0.08); }
+
+        .photo.r-2-3 { aspect-ratio: 2/3; }
+        .photo.r-3-4 { aspect-ratio: 3/4; }
+        .photo.r-1-1 { aspect-ratio: 1/1; }
+        .photo.r-4-3 { aspect-ratio: 4/3; }
+        .photo.r-16-9 { aspect-ratio: 16/9; }
+        .photo.r-9-16 { aspect-ratio: 9/16; }
+        .photo.r-3-2 { aspect-ratio: 3/2; }
+        .photo.r-9-16 { aspect-ratio: 9/16; }
+
+        /* 不規則排版網格 */
+        .mosaic { display: grid; gap: 20px; margin: 48px 0; }
+        .mosaic.m-3 { grid-template-columns: 1.4fr 1fr 0.8fr; }
+        .mosaic.m-2-1 { grid-template-columns: 2fr 1fr; align-items: stretch; }
+        .mosaic.m-1-2 { grid-template-columns: 1fr 2fr; align-items: stretch; }
+        .mosaic.m-3-1 { grid-template-columns: 3fr 1fr; align-items: stretch; }
+        .mosaic.m-1-3 { grid-template-columns: 1fr 3fr; align-items: stretch; }
+        .mosaic.m-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+        .mosaic.m-1-1 { grid-template-columns: 1fr 1fr; align-items: stretch; }
+
+        .hero-photo { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; margin: 64px 0; border-radius: 6px; box-shadow: 0 12px 40px rgba(42,42,42,0.12); }
+        .hero-photo img { width: 100%; height: 100%; object-fit: cover; animation: heroPan 24s ease-in-out infinite alternate; }
+        @keyframes heroPan { 0% { transform: scale(1.05) translateX(0); } 100% { transform: scale(1.12) translateX(-1.5%); } }
+        .hero-photo .cap { position: absolute; bottom: 24px; left: 32px; color: #fff; font-size: 0.78rem; letter-spacing: 3px; font-family: 'Noto Sans TC', sans-serif; background: rgba(0,0,0,0.45); padding: 6px 14px; border-radius: 3px; backdrop-filter: blur(4px); }
+
+        .cinema { position: relative; height: 80vh; min-height: 480px; overflow: hidden; margin: 80px 0; border-radius: 6px; }
+        .cinema img { width: 100%; height: 100%; object-fit: cover; animation: cinemaPan 22s ease-in-out infinite alternate; }
+        @keyframes cinemaPan { 0% { transform: scale(1.08); } 100% { transform: scale(1.15) translate(-1%, -0.5%); } }
+        .cinema::before { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(180deg, rgba(42,42,42,0.1) 0%, transparent 30%, transparent 70%, rgba(42,42,42,0.6) 100%); }
+        .cinema::after { content: ''; position: absolute; inset: 0; z-index: 3; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px); pointer-events: none; }
+        .cinema .badge { position: absolute; top: 28px; left: 32px; z-index: 4; color: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 0.7rem; letter-spacing: 4px; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.4); padding: 6px 12px; border-radius: 3px; backdrop-filter: blur(4px); }
+        .cinema .badge .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--vermillion); animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+        .cinema .tc { position: absolute; top: 28px; right: 32px; z-index: 4; color: rgba(255,255,255,0.85); font-family: 'Courier New', monospace; font-size: 0.72rem; background: rgba(0,0,0,0.4); padding: 4px 10px; border-radius: 3px; }
+        .cinema .quote-overlay { position: absolute; bottom: 60px; left: 0; right: 0; z-index: 4; text-align: center; color: #fff; padding: 0 32px; }
+        .cinema .quote-overlay .q { font-size: clamp(1.4rem, 3.5vw, 2.2rem); font-weight: 400; letter-spacing: 4px; line-height: 1.6; text-shadow: 0 2px 20px rgba(0,0,0,0.6); }
+        .cinema .quote-overlay .who { font-size: 0.75rem; letter-spacing: 6px; opacity: 0.85; margin-top: 16px; font-family: 'Noto Sans TC', sans-serif; }
+
+        /* 貓主題章節 */
+        .chapter.cat { background: linear-gradient(180deg, transparent 0%, rgba(184,51,43,0.04) 50%, transparent 100%); padding-top: 120px; padding-bottom: 120px; }
+        .cat .cat-hero { position: relative; max-width: 900px; margin: 0 auto 64px; }
+        .cat .cat-eyes { font-family: 'Ma Shan Zheng', serif; font-size: clamp(2.5rem, 7vw, 4.5rem); text-align: center; color: var(--vermillion); letter-spacing: 12px; margin-bottom: 24px; }
+        .cat .cat-prose { max-width: 760px; margin: 0 auto; font-size: 1.15rem; line-height: 2.3; color: var(--ink); text-align: center; letter-spacing: 2px; }
+        .cat .cat-prose .em { color: var(--vermillion); font-weight: 500; }
+        .cat .cat-prose .soft { color: var(--jade); }
+        .cat .cat-feature { max-width: 720px; margin: 64px auto 0; }
+        .cat .cat-note { max-width: 600px; margin: 56px auto 0; text-align: center; font-family: 'Noto Sans TC', sans-serif; font-size: 0.78rem; color: var(--ink-soft); letter-spacing: 3px; line-height: 2; }
+        .cat .cat-note::before { content: '◈'; display: block; color: var(--gold); margin-bottom: 16px; font-size: 1rem; }
+
+        .divider-cinema { position: relative; height: 50vh; min-height: 320px; overflow: hidden; margin: 0; }
+        .divider-cinema img { width: 100%; height: 100%; object-fit: cover; animation: divPan 28s ease-in-out infinite alternate; }
+        @keyframes divPan { 0% { transform: scale(1.1) translate(0,0); } 100% { transform: scale(1.18) translate(-2%, -1%); } }
+        .divider-cinema::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(246,240,225,0.3) 0%, rgba(246,240,225,0.6) 100%); }
+        .divider-cinema .label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2; color: var(--ink); font-family: 'Ma Shan Zheng', serif; font-size: clamp(1.5rem, 4vw, 2.5rem); letter-spacing: 10px; }
+
+        .epilogue { max-width: 800px; margin: 0 auto; padding: 120px 32px 80px; text-align: center; }
+        .epilogue .stamp { display: inline-block; width: 80px; height: 80px; border: 3px solid var(--vermillion); border-radius: 4px; line-height: 80px; font-family: 'Ma Shan Zheng', serif; font-size: 2.4rem; color: var(--vermillion); margin-bottom: 32px; transform: rotate(-6deg); background: rgba(184,51,43,0.04); }
+        .epilogue .words { font-size: clamp(1.2rem, 2.6vw, 1.65rem); line-height: 2.2; color: var(--ink); letter-spacing: 3px; }
+        .epilogue .words .em { color: var(--vermillion); font-weight: 500; }
+        .epilogue .sign { margin-top: 56px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.8rem; color: var(--ink-soft); letter-spacing: 6px; }
+        .epilogue .sign::before { content: '——'; color: var(--gold); margin-right: 12px; }
+
+        footer { background: var(--paper-warm); padding: 48px 24px; text-align: center; font-family: 'Noto Sans TC', sans-serif; font-size: 0.72rem; color: var(--ink-soft); letter-spacing: 3px; }
+        footer .credit { margin-top: 8px; font-size: 0.68rem; opacity: 0.7; }
+
+        @media (max-width: 900px) {
+            .flow-item.text-left, .flow-item.text-right { grid-template-columns: 1fr; }
+            .mosaic.m-3, .mosaic.m-4 { grid-template-columns: 1fr 1fr; }
+            .mosaic.m-2-1, .mosaic.m-1-2, .mosaic.m-3-1, .mosaic.m-1-3, .mosaic.m-1-1 { grid-template-columns: 1fr; }
+            nav .links { display: none; }
+            .chapter { padding: 60px 20px; }
+        }
+        @media (max-width: 600px) {
+            .mosaic.m-3, .mosaic.m-4 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <div class="nav-inner">
+        <div class="brand">蘇州六日</div>
+        <ul class="links">
+            <li><a href="#ch0">序</a></li>
+            <li><a href="#ch1">平江</a></li>
+            <li><a href="#ch2">拙博</a></li>
+            <li><a href="#ch3">梵貓</a></li>
+            <li><a href="#ch4">貓·蘇州</a></li>
+            <li><a href="#ch5">虎丘</a></li>
+            <li><a href="#ch6">金雞</a></li>
+            <li><a href="#ch7">歸途</a></li>
+        </ul>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-bg">
+        <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/4:3%E6%B9%96%E7%95%94%E5%9F%8E%E5%B8%82%E5%89%AA%E5%BD%B1%E7%85%A7%E7%89%87.jpg?sign=1783854363-f5f5e236cf-0-281627723ef3d436d041e798cdc0df00e661364c0a42eb411275193bd5aeb1a0" alt="金雞湖畔人物剪影">
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="ch-title">蘇州六日</div>
+        <div class="sub">以 貓 喻 城</div>
+        <div class="divider"></div>
+        <div class="seal">六 日 五 夜 · 江 南 行 紀</div>
+    </div>
+</section>
+
+<section class="preface" id="ch0">
+    <div class="quote">江南憶，其次憶<span class="em">蘇州</span>。<br>姑蘇城外寒山寺，夜半鐘聲到客船。</div>
+    <div class="attribution">唐 · 張繼 · 楓橋夜泊</div>
+</section>
+
+<section class="chapter" id="ch1">
+    <div class="chapter-head">
+        <div class="chapter-num">壹</div>
+        <h2 class="chapter-title">平江初夜</h2>
+        <div class="chapter-sub">踏入蘇州的第一口呼吸</div>
+    </div>
+
+    <div class="flow">
+        <div class="flow-item text-left">
+            <div class="text-col">
+                <p>從桃園出發，經浦東機場，再由上海一路向西——這是抵達蘇州前最漫長的一段轉折。當車駛過相門橋，暮色裡的<span class="em">平江府</span>燈火一盞一盞地亮了起來。</p>
+                <p>推開房門的那一刻，窗外平江路的水聲、石板路的腳步聲、評彈的隱隱約約，一股腦地湧了進來。蘇州不是用眼睛看的城市，是用<span style="color:var(--vermillion);font-weight:500;">呼吸</span>進去的。</p>
+                <div class="pull">水，是這座城市的血脈。</div>
+                <p>晚餐是平江府旁的姚家味——一盤紅燒肉，肥而不膩，醬色溫潤。蘇州人的待客之道就藏在這鹹甜之間：不是濃油赤醬的重，是恰到好處的暖。</p>
+            </div>
+            <div class="photo r-3-4">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E6%B1%9F%E5%8D%97%E6%B0%B4%E4%B9%A1%EF%BC%88%E6%B8%B8%E8%88%B9%EF%BC%89%E7%85%A7%E7%89%87.jpg?sign=1783854363-9063e1c27f-0-a4054ad3bdef0b5754445c13d9fe56c9e437b075ae92529b7691f4de267568b6" alt="平江路水鄉">
+                <div class="cap">平江路夜色 · 抵達</div>
+            </div>
+        </div>
+
+        <div class="flow-item text-right">
+            <div class="photo r-1-1">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E7%BA%A2%E7%83%A7%E8%82%89%20%E7%BE%8E%E9%A3%9F%E7%85%A7%E7%89%87.jpg?sign=1783854363-3a56a539ed-0-8168945efa0248c4ba914a2887dd3fd722f875181fba3e56931079f7f503d698" alt="紅燒肉">
+                <div class="cap">姚家味 · 紅燒肉</div>
+            </div>
+            <div class="text-col">
+                <p>這是一座<span style="color:var(--vermillion);font-weight:500;">慢</span>的城市。從第一天開始，蘇州就在用它的節奏告訴我：不要趕，不要急，不要把旅行當作打卡。</p>
+                <p>石板路被幾百年的腳步磨得發亮，巷弄裡的貓已經睡著，店家在打烊前把桌椅一張一張收進屋裡。蘇州的夜晚，是交還給生活本身的時間。</p>
+                <div class="pull">夜，是生活的留白。</div>
+            </div>
+        </div>
+
+        <div class="flow-item text-left">
+            <div class="text-col">
+                <p>平江府旁的這條街，記錄著我對蘇州的<span style="color:var(--jade);">第一個溫度</span>。一位穿漢服的女子騎電車穿過，衣袂在風中飄起——那一刻我突然意識到：江南的「古」不是博物館，是<span style="color:var(--vermillion);font-weight:500;">仍然活在街上的日常</span>。</p>
+            </div>
+            <div class="photo r-9-16">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/2:3%E5%8F%A4%E8%A3%85%E5%A5%B3%E5%AD%90%E9%AA%91%E7%94%B5%E5%8A%A8%E8%BD%A6%E7%85%A7%E7%89%87.jpg?sign=1783854363-8c8659925b-0-4890d1a00736d0fefda97d2fd6f51d327c70cf14c2d8c36be7a99f386b39e0a7" alt="漢服女子">
+                <div class="cap">漢服女子 · 江南的日常</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="chapter" id="ch2">
+    <div class="chapter-head">
+        <div class="chapter-num">貳</div>
+        <h2 class="chapter-title">拙政與蘇博</h2>
+        <div class="chapter-sub">園林與建築的兩種江南</div>
+    </div>
+
+    <p class="chapter-prose">拙政園是蘇州園林的「壓卷之作」——這不是旅遊手冊的溢美，而是走進去之後的必然嘆息。<span class="em">借景、漏窗、移步換景</span>⋯⋯中國人把對「天人合一」最極致的理解，都砌在了這幾畝水石之間。</p>
+
+    <div class="flow">
+        <div class="flow-item text-left">
+            <div class="text-col">
+                <p>那天<span style="color:var(--vermillion);font-weight:500;">天公不作美</span>，陰雨綿綿，拙政園的影像拍得都不盡理想。<span style="color:var(--jade);">遊記不必所有景點都留影</span>，把那份朦朧留給回憶，反而更江南。</p>
+                <p>於是改以兩張江南意象的水墨風格照片代之——一張蘇博，一張蘭草。它們是拙政的<span style="color:var(--vermillion);font-weight:500;">精神注腳</span>，不必是它的真實留影。</p>
+            </div>
+            <div class="photo r-3-4 ink">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E8%8B%8F%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86%E7%85%A7%E7%89%87.jpg?sign=1783854363-835126234d-0-4b474e34f0fecc50a6700518ed33af201eefdaca663a324a0dcc698105aef42a" alt="蘇州博物館">
+                <div class="cap">蘇州博物館 · 水墨代拙政</div>
+            </div>
+        </div>
+
+        <div class="flow-item text-right">
+            <div class="photo r-1-1 ink">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E5%85%B0%E8%8A%B1%E7%9B%86%E6%A0%BD%E7%85%A7%E7%89%87.jpg?sign=1783854363-660fe0ace3-0-c7a54c971054933963e9aea728e215e62978f7333f8a7ab4c9486ad083fb4ccc" alt="網師園蘭草">
+                <div class="cap">網師園蘭草 · 園林意象</div>
+            </div>
+            <div class="text-col">
+                <p>貝聿銘把姑蘇園林的精神，用鋼架、玻璃和石灰岩重新演繹了一遍。庭院裡的片石假山，光從屋頂的幾何縫隙灑下來——<span class="soft">「現代」從來不是西方的專利，江南園林本就是千年前的「現代」。</span></p>
+                <div class="pull">園林不是景，園林是時間的容器。</div>
+                <p>園子裡的蘭草、石池、漏窗⋯⋯它們不是裝飾，是把自然「請進來」的姿態。蘇州人從來不征服山水，他們只是和山水商量著住在一起。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="chapter" id="ch3">
+    <div class="chapter-head">
+        <div class="chapter-num">叁</div>
+        <h2 class="chapter-title">梵剎與貓</h2>
+        <div class="chapter-sub">千年鐘聲裡，藏著幾隻酣睡的靈魂</div>
+    </div>
+
+    <p class="chapter-prose">寒山寺與西園寺，是這次蘇州之行最意外的收穫——原本只為聽一場「夜半鐘聲」，卻撞進了<span class="em">一座會撒嬌的廟宇</span>。原來蘇州的貓，就藏在香火最盛的地方。</p>
+
+    <div class="photo r-2-3" style="max-width:600px; margin:48px auto;">
+        <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E7%9F%B3%E8%BE%B9%E7%9D%A1%E7%8C%AB%E7%85%A7%E7%89%87.jpg?sign=1783854363-1bbdc064dc-0-e552da3f508bd40e2117e8de8a2a4422e3209f9af88358b5d972db7c457ff742" alt="寒山寺睡貓">
+        <div class="cap">寒山寺 · 假山石旁的「佛系」睡貓</div>
+    </div>
+
+    <div class="flow">
+        <div class="flow-item text-right">
+            <div class="text-col">
+                <p>寒山寺的貓不怕人，也不躲人——<span class="em">牠就那樣蜷在假山石上</span>，像在聽一千四百年前張繼的詩，又像根本沒在聽。</p>
+                <p>轉到西園寺，黑白色調裡的貓一臉「我自是牠」的鬆弛——<span class="soft">這就是蘇州貓的本事：再多人圍觀，牠的世界照樣是自己的節奏。</span></p>
+                <div class="pull">寺廟是修行的，貓是修心的。</div>
+                <p>換宿這天，從平江路搬到鑽石廣場橘子酒店——城東到城西，蘇州的另一面。推開房門，床頭的小酒櫃上擺著兩瓶小酒，是城市給旅人最體面的晚安。</p>
+            </div>
+            <div class="photo r-1-1">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E9%85%92%E6%9F%9C%E9%85%92%E7%93%B6%E9%99%88%E5%88%97%E7%85%A7%E7%89%87.jpg?sign=1783854363-fa3c2ba58a-0-801607dd16e6388df0b668b0799b5943783e59c99a4c11ff7b993695434861a1" alt="鑽石廣場橘子酒店酒櫃">
+                <div class="cap">鑽石廣場橘子酒店 · 換宿的儀式感</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="chapter cat" id="ch4">
+    <div class="chapter-head" style="text-align:center;">
+        <div class="chapter-num" style="text-align:center;">肆 · 貓 · 蘇 州</div>
+        <h2 class="chapter-title" style="font-family:'Ma Shan Zheng',serif;">以貓喻城</h2>
+        <div class="chapter-sub">一座城市最深的氣質，往往藏在它最慵懶的角落</div>
+    </div>
+
+    <div class="cat-prose">
+        <p>杭州是雅致的、疏離的，<br>是「欲把西湖比西子，淡妝濃抹總相宜」裡的<span class="em">距離感</span>。</p>
+        <p style="margin-top:28px;">而蘇州，是另一種氣質——<br><span class="em">煙火氣十足</span>，是評彈、是紅燒肉、是清晨巷弄裡的泡飯香、<br>是傍晚河邊洗衣婦一棒一棒搗衣裳的節奏。</p>
+        <p style="margin-top:36px;">蘇州的貓，從來不怕人。<br>牠們蜷在寒山寺的假山石上、臥在西園寺的青磚地、<br>在觀前街的石階上打盹、在平江路的窗台上看遊人。</p>
+        <p style="margin-top:28px;">牠們<span class="em">外表溫順慵懶、隨性沉思、自在鬆弛</span>——<br>即便被圍觀也淡然自若。<br>看似溫和，實則自帶風骨與個性。</p>
+        <p style="margin-top:36px; font-size:1.25rem; color:var(--vermillion);">這是蘇州給我最深刻的感受：<br>溫柔，卻不軟弱；<br>從容，卻不敷衍；<br>親近，卻不依附。</p>
+    </div>
+
+    <div class="flow">
+        <div class="flow-item text-right">
+            <div class="text-col">
+                <p>西園寺裡，僧人、路人與一隻貓——這張照片我看了很久，每次看都有新的發現。</p>
+                <p>那天我在殿前站了很久。僧人對著遊客講了很多話，講戒律、講因果、講這座廟五百年的晨鐘暮鼓。遊客們聽得入神，偶爾點頭，偶爾拍照。</p>
+                <p>而那隻貓，<span class="em">一直沒有動</span>。</p>
+                <p>牠就那樣臥在青磚地上，半瞇著眼，像在聽，又像根本沒在聽。僧人講到精彩處，遊客鼓掌，貓的耳朵動了一下——<span class="soft">那是牠給的唯一回應</span>。</p>
+                <p>我忽然覺得，這才是蘇州最迷人的畫面：<span class="em">有人在講故事，有人在聽故事，而貓，就是故事本身</span>。</p>
+                <div class="pull">貓不動，是因為牠早已在故事裡。</div>
+            </div>
+            <div class="photo r-2-3">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/9:16%E5%83%A7%E4%BA%BA%E3%80%81%E4%BA%BA%E3%80%81%E7%8C%AB%E4%BA%92%E5%8A%A8%E7%85%A7%E7%89%87_1.jpg?sign=1783854363-17fa3ac4e1-0-6ea6bf360ae09f691e9dd165e9531854e5fb82371f2bd21e3df753bf80726cfe" alt="僧人路人與貓">
+                <div class="cap">西園寺 · 貓的修行</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cat-note">
+        杭州的貓像文人，<br>蘇州的貓像鄰居。<br>文人要你仰視，鄰居讓你安心。
+    </div>
+
+    <div style="margin:80px auto 40px; max-width:700px;">
+        <h3 style="font-family:'Ma Shan Zheng',serif; font-size:1.5rem; color:var(--vermillion); text-align:center; margin-bottom:12px;">躺</h3>
+        <p style="text-align:center; color:var(--ink-soft); font-size:0.88rem; letter-spacing:2px; margin-bottom:36px;">貓躺在地上，童車也躺在地上——<br>蘇州的「自在」，是一種可以隨地躺下的安心。</p>
+        <div class="mosaic m-1-1">
+            <div class="photo r-1-1">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E7%99%BD%E7%8C%AB%E8%BA%BA%E5%9C%B0%E7%A0%96%E7%85%A7%E7%89%87.jpg?sign=1783854363-8b46ae80d1-0-9fea45ef3a38c5591c064aad24fa9c5f278c4862b44ac74bfeef11b0f472347e" alt="白貓躺地">
+                <div class="cap">白貓 · 西園寺的午后</div>
+            </div>
+            <div class="photo r-1-1">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E6%B9%96%E7%95%94%E7%AB%A5%E8%BD%A6%E9%A3%8E%E6%99%AF%E7%85%A7.jpg?sign=1783854363-577f6fb7aa-0-1a2dcd500ee44875804b69c29bfa1b31d39f8b7858944106010070d97de89a41" alt="湖畔童車">
+                <div class="cap">金雞湖畔 · 倒下的童車</div>
+            </div>
+        </div>
+        <p style="text-align:center; color:var(--ink-soft); font-size:0.82rem; letter-spacing:1px; margin-top:24px; font-style:italic;">一個躺得理直氣壯，一個躺得若無其事。<br>這座城市，連物件都學會了貓的哲學。</p>
+    </div>
+</section>
+
+<div class="divider-cinema">
+    <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E8%99%8E%E4%B8%98%E5%A1%94%E6%99%AF%E5%8C%BA%E7%85%A7%E7%89%87.jpg?sign=1783854315-fd73f6b428-0-ad826e3a5da955fdfba2178d1166feb3ef5bb288057686fbfed877a6cf6e3f48" alt="虎丘塔">
+    <div class="label">虎 丘 塔 影</div>
+</div>
+
+
+<section class="chapter" id="ch5">
+    <div class="chapter-head">
+        <div class="chapter-num">伍</div>
+        <h2 class="chapter-title">虎丘塔影</h2>
+        <div class="chapter-sub">千年斜塔、劍池、與水鄉的早晨</div>
+    </div>
+
+    <p class="chapter-prose">虎丘是蘇州<span class="em">最傲慢</span>的古跡——一座被蘇軾寫進詩裡的園林，被闔閭埋進土裡的劍池，被時間一寸一寸斜著推、卻始終不倒的塔。</p>
+
+    <div class="mosaic m-3">
+        <div class="photo r-3-4">
+            <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E8%99%8E%E4%B8%98%E5%A1%94%E6%99%AF%E5%8C%BA%E7%85%A7%E7%89%87.jpg?sign=1783854315-fd73f6b428-0-ad826e3a5da955fdfba2178d1166feb3ef5bb288057686fbfed877a6cf6e3f48" alt="虎丘塔">
+            <div class="cap">虎丘 · 吳中第一山</div>
+        </div>
+        <div class="photo r-2-3">
+            <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E5%8F%A4%E5%A1%94%E5%89%8D%E4%BA%BA%E7%89%A9%E7%85%A7%E7%89%87.jpg?sign=1783854363-dd4804e2c4-0-ec0fccb8200e257705dbde95fbcb57e3e29cbbfa34bcfa9826080a81bf3b92bd" alt="塔下的人">
+            <div class="cap">塔下的人 · 時間的尺度</div>
+        </div>
+        <div class="photo r-1-1">
+            <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E7%9D%A1%E8%8E%B2%E7%85%A7%E7%89%87.jpg?sign=1783854363-f75bace8fa-0-f20cfb76d070dc8470599dab38cc46213382cca98624bc16b0cc1bf5a44f1ccf" alt="虎丘睡蓮">
+            <div class="cap">虎丘一隅 · 睡蓮初夏</div>
+        </div>
+    </div>
+
+    <div class="flow">
+        <div class="flow-item text-left">
+            <div class="photo r-3-4">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E5%89%91%E6%B1%A0%E7%9F%B3%E6%A1%A5%E9%A3%8E%E6%99%AF%E7%85%A7%E7%89%87.jpg?sign=1783854363-be7e607d4a-0-227a9e62185d9d41423f10c2448fdc4d117e93ef32fd239e814d426d18c38685" alt="劍池">
+                <div class="cap">劍池 · 闔閾的祕密</div>
+            </div>
+            <div class="text-col">
+                <p>水鄉遊船的早晨，是虎丘給蘇州寫的<span class="em">另一句情書</span>。船從山塘街段緩緩搖出，岸邊的早餐店剛剛升起第一縷炊煙，船伕的槳聲和岸上的吳儂軟語，合奏成一曲「江南早晨」。</p>
+                <p>兩張水鄉遊船，一張是「行進中」，一張是「靠岸時」——蘇州的水上節奏，<span class="soft">從來不催你</span>。</p>
+            </div>
+        </div>
+
+        <div class="mosaic m-1-2">
+            <div class="photo r-2-3">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E6%B0%B4%E4%B9%A1%E6%B8%B8%E8%88%B9%20%E7%85%A7%E7%89%87_1.jpg?sign=1783854363-d3efc5fda3-0-c2ef3c1a0b96af97f9101059d212d8403af501aba4776458cab752b44295b134" alt="水鄉遊船1">
+                <div class="cap">水鄉遊船 · 行進</div>
+            </div>
+            <div class="photo r-2-3">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E6%B0%B4%E4%B9%A1%E6%B8%B8%E8%88%B9%20%E7%85%A7%E7%89%87.jpg?sign=1783854363-95fb4062d3-0-1d3388c9101f87b8f38732723bf77b0a563b99b7bb1ff1d8bbaaa8e77120416a" alt="水鄉遊船2">
+                <div class="cap">水鄉遊船 · 靠岸</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flow">
+        <div class="flow-item text-left">
+            <div class="text-col">
+                <p>夕陽收尾，楓橋邊的船帆染成金紅色。「月落烏啼霜滿天，江楓漁火對愁眠」——張繼筆下的楓橋，<span class="em">在入夏的尾巴依然浪漫得像一首宋詞</span>。</p>
+                <p>我沒能在這裡過夜，但站在橋上那一刻突然覺得：<span class="soft">旅行不是為了看見新的風景，是為了讓舊的詩句在眼前重新醒過來。</span></p>
+                <div class="pull">月落烏啼，楓橋依舊。</div>
+            </div>
+            <div class="photo r-16-9">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E6%9E%AB%E6%A1%A5%20%E9%A3%8E%E6%99%AF%E7%85%A7%E7%89%87.jpg?sign=1783854363-279768c520-0-37a82a51c86a1ae15df14f464e305222bd22531f0b04cf3947d326da27a8444e" alt="楓橋風景">
+                <div class="cap">楓橋 · 夜泊的詩意</div>
+            </div>
+        </div>
+
+        <div class="flow-item text-right">
+            <div class="photo r-1-1">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E8%9E%BA%E8%9B%B3%E7%B2%89%E7%BE%8E%E9%A3%9F%E7%85%A7%E7%89%87.jpg?sign=1783854363-c59224e9e3-0-f06ed76436ed2ccdd825f9f21b978703e8a86d934db44a8bf7c5c2bf4fac022b" alt="螺螄粉">
+                <div class="cap">十全街 · 螺螄粉</div>
+            </div>
+            <div class="text-col">
+                <p>下午轉到十全街——這條藏著老蘇州煙火氣的巷弄，螺螄粉的香氣從街角飄來。</p>
+                <p>這是螺螄粉的<span class="em">初體驗</span>。原來蘇州也吃辣，但蘇州人吃辣的方式是「點綴」，不是「宣洩」——<span class="soft">對於我這個不耐辣的人，那一碗是真的辣到無法細細品嘗</span>，只記得紅油在燈下晃、記得同桌的笑聲蓋過了嗆咳。</p>
+                <div class="pull">辣，是另一種煙火氣。</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="chapter" id="ch6">
+    <div class="chapter-head">
+        <div class="chapter-num">陸</div>
+        <h2 class="chapter-title">金雞湖光</h2>
+        <div class="chapter-sub">蘇州也有海，蘇州也有落日</div>
+    </div>
+
+    <p class="chapter-prose">金雞湖是蘇州給的<span class="em">另一個維度</span>——它是這座古城「另一面」的回答：古城有古城的雅，園區有園區的氣派。<span class="soft">古與今在這裡握手言和。</span></p>
+
+    <div class="hero-photo">
+        <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/4:3%E5%9F%8E%E5%B8%82%E6%97%A5%E8%90%BD%E6%B9%96%E6%99%AF%E7%85%A7%E7%89%87.jpg?sign=1783854363-036e53e821-0-7b6f24760bfcea92d1142056d2c5974df03981bd6b9a2bfd9f2e85644091f6ca" alt="金雞湖日落">
+        <div class="cap">金雞湖畔 · 落日熔金</div>
+    </div>
+
+    <div class="photo r-3-4" style="max-width:480px; margin:48px auto;">
+        <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/2:3DJI%E5%85%B1%E4%BA%AB%E6%97%A0%E4%BA%BA%E6%9C%BA%E6%9F%9C%E7%85%A7%E7%89%87_1.jpg?sign=1783854363-cf75cd7d82-0-2239504fd908dd10bf4d2465bc065af1fdd0bca8502ccf4219a93b79d60a3954" alt="DJI共享無人機">
+        <div class="cap">DJI 共享無人機櫃 · 金雞湖畔的科技一隅</div>
+    </div>
+
+    <div class="flow">
+        <div class="flow-item text-right">
+            <div class="text-col">
+                <p>李公堤的凌雲橋，是這次金雞湖最讓人醉的<span class="em">月夜</span>。水面倒映著橋洞，岸邊的茶館飄出評彈的尾音——蘇州的「夜生活」，不是夜店，是月光下的古橋。</p>
+                <p>得月樓的晚餐把這一天收得恰到好處：松鼠鱖魚外酥裡嫩、醬汁酸甜，是<span class="soft">「蘇幫菜」三個字最具體的註腳</span>。</p>
+                <div class="pull">金雞湖不是西湖，<br>但它有蘇州自己的潮汐。</div>
+            </div>
+            <div class="photo r-9-16">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E6%9C%88%E5%A4%9C%E5%BB%8A%E6%A1%A5%E7%85%A7%E7%89%87.jpg?sign=1783854363-fba0c2eb3c-0-6742f98d517caf26d6d602263a6a8541a13b2835207dc91ca3e574e0aaa809c6" alt="李公堤月夜古橋">
+                <div class="cap">李公堤 · 凌雲橋月夜</div>
+            </div>
+        </div>
+
+        <div class="cinema">
+            <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/4:3%E5%9F%8E%E5%B8%82%E5%A4%9C%E6%99%AF%E7%85%A7%E7%89%87.jpg?sign=1783854363-9bc76e7d27-0-0500296c4a10f04eb90391cb98c9cba1b6b04d6ba95f4e9bfedd5ca07c89f539" alt="金雞湖夜景">
+            <div class="badge"><span class="rec"></span> REC · 湖畔夜色</div>
+            <div class="tc">湖畔夜色 · JJH-027</div>
+            <div class="quote-overlay">
+                <div class="q">湖是城市的眼睛，<br>燈是城市的睫毛。</div>
+                <div class="who">—— 金雞湖畔 · 城市的呼吸</div>
+            </div>
+        </div>
+
+        <div class="photo r-3-4" style="max-width:420px; margin:48px auto;">
+            <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/4:3%E6%9D%BE%E9%BC%A0%E6%A1%82%E9%B1%BC%E7%BE%8E%E9%A3%9F%E7%85%A7%E7%89%87.jpg?sign=1783854363-4fb003f514-0-39b1f2ff98d5a8c251f153a964060249d4191e48fbc0b4e425b583a2813d54e4" alt="松鼠桂魚">
+            <div class="cap">得月樓 · 松鼠桂魚</div>
+        </div>
+    </div>
+</section>
+
+
+<section class="chapter" id="ch7">
+    <div class="chapter-head">
+        <div class="chapter-num">柒</div>
+        <h2 class="chapter-title">觀前與歸途</h2>
+        <div class="chapter-sub">最後的採買，最遠的航班</div>
+    </div>
+
+    <p class="chapter-prose">最後一天是採買日——觀前街的特產、誠品的書、蘇州中心的伴手禮⋯⋯<span class="em">觀前街比較商業化，我沒特別拍照</span>，只是買了一些特產。老實說，買的時候心裡沒底——<span class="soft">蘇州的口味帶回去，同事能不能接受？畢竟存在差異</span>。</p>
+
+    <p class="chapter-prose" style="margin-top:24px;">但印象最深的，是<span class="em">采芝齋的松子糖</span>。回來後每個同事才分到一顆，結果有位吃了一口——<span style="color:var(--vermillion);font-weight:500;">牙齒掉了</span>。想不到一顆松子糖就能磕掉一顆牙，大家都覺得蠻好笑的。</p>
+
+    <div class="mosaic m-3">
+        <div class="photo r-9-16">
+            <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E5%95%86%E5%9C%BA%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E7%85%A7%E7%89%87.jpg?sign=1783854363-02fe6e70e3-0-846aef46e9ad3a4457592216201b7d1ca374221d7b7c42b6cfe1254d356d152d" alt="蘇州中心商場">
+            <div class="cap">蘇州中心 · 商場內部</div>
+        </div>
+        <div class="photo r-9-16">
+            <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E6%91%A9%E5%A4%A9%E6%A5%BC%20%E5%BB%BA%E7%AD%91%E7%85%A7%E7%89%87.jpg?sign=1783854363-f6e9cb9d6b-0-71e4368dade61a922909326efa2a2385e7c7299a19715f31975f19f74d8c45e0" alt="東方之門">
+            <div class="cap">東方之門 · 秋褲門</div>
+        </div>
+        <div class="photo r-9-16">
+            <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/9:16%E6%A5%BC%E6%A2%AF%E5%89%8D%E7%9A%84%E4%B8%A4%E4%BA%BA%E7%85%A7%E7%89%87_1.jpg?sign=1783854363-69a241432c-0-715dddc094924224415ddf0ca3b5f5e41fd6251092601db4d7454e44dadc3fe5" alt="誠品樓梯">
+            <div class="cap">誠品 · 樓梯前兩人</div>
+        </div>
+    </div>
+
+    <div class="flow">
+        <div class="flow-item text-left">
+            <div class="text-col">
+                <p>誠品的扶梯把人送上二樓的書區——<span class="em">誠品的書架是另一種「江南」</span>，不是水墨，是油墨；不是評彈，是翻書的沙沙聲。</p>
+                <p>蘇州把「古」和「今」、「靜」和「動」、「園林」和「書店」放在同一座城市裡，<span class="soft">不衝突，不比較，只是並列著</span>——這本身就是一種自信。</p>
+                <div class="pull">採買，是把江南打包。</div>
+            </div>
+            <div class="photo r-3-4">
+                <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E6%89%B6%E6%A2%AF%E8%A1%8C%E4%BA%BA%E7%85%A7%E7%89%87.jpg?sign=1783854363-979a4964b2-0-b87f1fe5b330141ebf2fd37c3c39688ecaaca3e5bd4fcb8328f61e391e634a69" alt="誠品扶梯">
+                <div class="cap">誠品 · 扶梯上的人</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cinema" style="height:60vh;">
+        <img src="https://static.coze.site/177464387570147_0-data_volume/7649207726911881498-files/%E6%89%80%E6%9C%89%E5%AF%B9%E8%AF%9D/%E4%B8%BB%E5%AF%B9%E8%AF%9D/suzhou_photos_v2/3:4%E6%9C%BA%E5%9C%BA%E5%A4%A7%E5%8E%85%E7%85%A7%E7%89%87.jpg?sign=1783854363-6d14b49a26-0-6fda41ad6b4a40c4b3e38eba5fcc525aa254937df2d042840f4286d41295924b" alt="浦東機場">
+        <div class="badge"><span class="rec"></span> REC · 返程</div>
+        <div class="tc">PVG · 18:34 · 歸途</div>
+        <div class="quote-overlay">
+            <div class="q">不是結束，是<span style="color:var(--vermillion);">另一場相遇</span>的開始。</div>
+            <div class="who">—— 浦東機場 · 帶著蘇州回家</div>
+        </div>
+    </div>
+</section>
+
+<section class="epilogue">
+    <div class="stamp">蘇</div>
+    <p class="words">
+        蘇州六日，<br>帶走的是照片，留下的<span class="em">是呼吸</span>。<br><br>
+        這座城市的貓教會我一件事：<br>
+        <span class="em">溫柔，不是軟弱；從容，不是冷漠。</span><br>
+        所謂煙火氣，是把每一天都當作最珍貴的平常。<br><br>
+        下次再見，蘇州。<br>你的貓，會記得我的腳步。
+    </p>
+    <div class="sign">老迪 攝 · 小迪 編 · 以貓喻城</div>
+</section>
+
+<footer>
+    <div>蘇州六日五夜 · 2026.06.24 — 06.30</div>
+    <div class="credit">Photography by 老迪 · Story by 小迪 · 30 Photos · 8 Chapters</div>
+</footer>
+
+</body>
+</html>
