@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>貓走過的腳印 — 蘇州記事 · 第壹期</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f6f0e1;
+  --paper-dark: #ebe2c8;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-light: #8a8a8a;
+  --vermillion: #b8332b;
+  --vermillion-soft: #d4655d;
+  --jade: #5a6b4a;
+  --gold: #b8975a;
+  --line: rgba(26,26,26,0.15);
+  --line-soft: rgba(26,26,26,0.06);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: #2a2a2a;
+  font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.magazine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  gap: 60px;
+}
+
+.page {
+  width: 250mm;
+  height: 350mm;  /* v3.3: 固定页面长宽比，防止跑版 */
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+  page-break-after: always;
+  aspect-ratio: 250 / 350;  /* v3.3: 固定长宽比保险 */
+}
+
+/* 紙張紋理 */
+.page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(ellipse at 20% 20%, rgba(184,135,90,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(184,135,90,0.03) 0%, transparent 50%),
+    repeating-linear-gradient(45deg, transparent, transparent 100px, rgba(0,0,0,0.008) 100px, rgba(0,0,0,0.008) 101px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 頁面內邊距 */
+.page-inner {
+  position: relative;
+  height: 100%;
+  padding: 18mm 18mm 14mm;  /* v3.3: 减小底 padding 避免双重留白 */
+  z-index: 2;
+  display: flex;  /* v3.3: flex column 让 article 撑满 */
+  flex-direction: column;
+}
+
+/* 頁碼 */
+.page-num {
+  position: absolute;
+  bottom: 12mm;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  letter-spacing: 3px;
+  z-index: 5;
+}
+.page-num.left { left: 20mm; }
+.page-num.right { right: 20mm; text-align: right; }
+
+/* 章節起首大寫漢字 */
+.chapter-num {
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 5.5rem;
+  color: var(--vermillion);
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -4px;
+}
+
+/* ============ 封面 P1 ============ */
+.cover {
+  background: var(--paper);
+}
+.cover-photo {
+  position: absolute;
+  top: 22mm;
+  left: 0;
+  right: 0;
+  height: 220mm;
+  background: var(--paper);
+  overflow: hidden;
+}
+.cover-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.cover-title-block {
+  position: absolute;
+  top: 250mm;
+  left: 20mm;
+  right: 20mm;
+  z-index: 5;
+}
+.cover-mag-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  letter-spacing: 8px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.cover-mag-name .dot { color: var(--vermillion); margin: 0 4px; }
+.cover-title {
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 4.2rem;
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: 8px;
+  margin-bottom: 18px;
+}
+.cover-subtitle {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  letter-spacing: 6px;
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+.cover-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  letter-spacing: 2px;
+}
+.cover-meta .vol {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  color: var(--vermillion);
+  letter-spacing: 4px;
+  font-style: italic;
+}
+
+/* ============ 卷首語 P2 ============ */
+.preface {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.preface-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 32px;
+}
+.preface-head .label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  letter-spacing: 6px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+.preface-head .label-cn {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.85rem;
+  letter-spacing: 4px;
+  color: var(--ink);
+}
+.preface-photo {
+  width: 100%;
+  height: 110mm;
+  background: var(--paper);
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+.preface-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.preface-quote {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 1.15rem;
+  line-height: 2.1;
+  color: var(--ink);
+  letter-spacing: 4px;
+  text-align: justify;
+  margin-bottom: 24px;
+}
+.preface-quote .em {
+  color: var(--vermillion);
+  font-weight: 500;
+}
+.preface-quote .soft {
+  color: var(--ink-soft);
+}
+.preface-pull {
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 1.4rem;
+  color: var(--vermillion);
+  text-align: center;
+  letter-spacing: 6px;
+  padding: 20px 0;
+  margin: 16px 0;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+.preface-by {
+  text-align: right;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  letter-spacing: 4px;
+  margin-top: 12px;
+}
+.preface-by .signature {
+  display: inline-block;
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 1.6rem;
+  color: var(--vermillion);
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* ============ 內頁 P3-P6 ============ */
+.article {
+  flex: 1;  /* v3.3: 撑满 page-inner 剩余高度 */
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto 1fr;  /* v3.3: row 1 head auto, row 2 stretch */
+  gap: 0;
+  align-items: stretch;  /* v3.3: stretch 让 portrait/prose 等高，无留白 */
+  min-height: 0;  /* flex item 防止溢出 */
+}
+.article-head {
+  grid-column: 1 / -1;
+  grid-row: 1;  /* v3.3: 显式 row 1 */
+  align-self: start;  /* v3.3: 顶部对齐，不被 stretch */
+  display: flex;
+  align-items: center;
+  gap: 5mm;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 20px;
+}
+.article-avatar {
+  width: 24mm;
+  height: 24mm;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+}
+
+/* v3 新增：作为主图的头像（讲话中、半身） */
+.article-portrait {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.article-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.article-portrait .saying {
+  font-family: 'Noto Serif SC', serif;
+  font-style: italic;
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  letter-spacing: 2px;
+  text-align: center;
+  padding-top: 6px;
+}
+
+/* v3.1 升级：1:2 比例（头像 1/3，文字 2/3） */
+.article.full-image-left {
+  grid-template-columns: 1fr 2fr;
+}
+.article.full-image-right {
+  grid-template-columns: 2fr 1fr;
+}
+
+/* v3.2 修复：显式指定 portrait/prose 网格列位
+   修复前 P4/P6 (full-image-right) 的 portrait 被 auto-placement 错放到 2fr 列 (509px)
+   P3/P5 (full-image-left) 的 portrait 在 1fr 列 (254px) → 4 张头像大小不一致
+   v3.2 显式指定：portrait 永远在 1fr 列，prose 永远在 2fr 列 */
+.article.full-image-left .article-portrait { grid-column: 1; grid-row: 2; }
+.article.full-image-left .article-prose  { grid-column: 2; grid-row: 2; }
+.article.full-image-right .article-portrait { grid-column: 2; grid-row: 2; }
+.article.full-image-right .article-prose  { grid-column: 1; grid-row: 2; }
+
+.article.full-image-left .article-portrait,
+.article.full-image-right .article-portrait {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  align-self: stretch;  /* v3.2: 拉到 prose 高度，container 不留白 */
+  aspect-ratio: 1 / 1;  /* v3.2: 强制 1:1 方形，4 张头像绝对等大 */
+}
+.article-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;  /* 保留上半身人脸，裁下半身 */
+}
+.article-head .ch {
+  font-family: 'Noto Serif SC', 'Noto Serif TC', serif;
+  font-weight: 700;
+  font-size: 2.4rem;
+  color: var(--vermillion);
+  line-height: 0.9;
+  letter-spacing: 8px;
+  font-style: italic;
+}
+.article-head .info { flex: 1; padding-bottom: 4px; }
+.article-head .name {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 1.4rem;
+  color: var(--ink);
+  letter-spacing: 6px;
+  margin-bottom: 4px;
+}
+.article-head .role {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.68rem;
+  color: var(--ink-soft);
+  letter-spacing: 4px;
+}
+.article-head .saying {
+  font-family: 'Noto Serif SC', 'Noto Serif TC', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--vermillion);
+  letter-spacing: 4px;
+  text-align: right;
+  padding-bottom: 4px;
+  line-height: 1.4;
+  max-width: 60mm;
+}
+
+.article-photo {
+  width: 100%;
+  background: var(--paper);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.article-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.article-photo .cap {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.65rem;
+  color: var(--ink-light);
+  letter-spacing: 2px;
+  padding-top: 6px;
+  text-align: center;
+}
+
+.article-prose {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.88rem;
+  line-height: 2;
+  color: var(--ink);
+  letter-spacing: 2px;
+  text-align: justify;
+  display: flex;  /* v3.3: flex column 让段落撑满容器高度 */
+  flex-direction: column;
+  min-height: 100%;
+}
+.article-prose p { margin-bottom: 12px; text-indent: 2em; flex: 0 0 auto; }
+.article-prose p:first-child { text-indent: 0; }
+.article-prose::after {  /* v3.3: 自动占位元素，吸收 prose 容器剩余高度 */
+  content: '';
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.article-prose > .spacer { flex: 1 1 auto; }  /* v3.3: 弹性占位，让段落之间撑开 */
+.article-prose p:first-child::first-letter {
+  font-family: 'Noto Serif SC', 'Noto Serif TC', serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--vermillion);
+  float: left;
+  line-height: 1;
+  margin: 4px 6px 0 0;
+}
+.article-prose .em { color: var(--vermillion); font-weight: 500; }
+.article-prose .soft { color: var(--ink-soft); }
+.article-prose .quote {
+  border-left: 2px solid var(--vermillion);
+  padding: 4px 0 4px 12px;
+  margin: 14px 0;
+  font-style: italic;
+  color: var(--ink-soft);
+  text-indent: 0;
+}
+.article-prose .advice-head {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.72rem;
+  color: var(--vermillion);
+  letter-spacing: 4px;
+  margin: 18px 0 8px;
+  text-indent: 0;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* 重要金句 */
+.pull-quote {
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 1.25rem;
+  color: var(--vermillion);
+  border-left: 3px solid var(--vermillion);
+  padding: 6px 0 6px 14px;
+  margin: 18px 0;
+  line-height: 1.7;
+  letter-spacing: 4px;
+  text-indent: 0;
+  background: rgba(184,51,43,0.04);
+}
+.pull-quote::before { content: '「'; opacity: 0.4; margin-right: 2px; }
+.pull-quote::after  { content: '」'; opacity: 0.4; margin-left: 2px; }
+
+/* 雙欄 */
+.two-col {
+  column-count: 2;
+  column-gap: 8mm;
+  column-rule: 1px solid var(--line-soft);
+}
+
+/* 文字繞圖 */
+.wrap-photo {
+  float: right;
+  width: 55%;
+  margin: 0 0 8px 12px;
+  shape-outside: margin-box;
+}
+
+/* 滿版照 */
+.full-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.full-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.45) contrast(1.1);
+}
+.full-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);
+  z-index: 2;
+}
+
+/* ============ 尾聲 P7 ============ */
+.ending {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.ending-head {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  letter-spacing: 6px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 24px;
+}
+.ending-body {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 8mm;
+  flex: 1;
+}
+.ending-photo {
+  height: 100%;
+  background: var(--paper);
+  overflow: hidden;
+}
+.ending-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.ending-prose {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.92rem;
+  line-height: 2.1;
+  color: var(--ink);
+  letter-spacing: 3px;
+  text-align: justify;
+}
+.ending-prose p { margin-bottom: 12px; text-indent: 2em; }
+.ending-prose p:first-child { text-indent: 0; }
+.ending-prose .em { color: var(--vermillion); font-weight: 500; }
+.ending-prose .gold-line {
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 1.6rem;
+  color: var(--vermillion);
+  text-align: center;
+  letter-spacing: 6px;
+  margin: 22px 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  text-indent: 0;
+}
+
+/* ============ 封底 P8 ============ */
+.backcover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  text-align: center;
+  padding-top: 30mm;
+  padding-bottom: 30mm;
+}
+.backcover-top {
+  width: 100%;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 30mm;
+}
+.backcover-top .label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  letter-spacing: 8px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.backcover-top .mag-name {
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 2.2rem;
+  color: var(--ink);
+  letter-spacing: 8px;
+}
+.backcover-photo {
+  width: 130mm;
+  height: 130mm;
+  background: var(--paper);
+  overflow: hidden;
+  margin-bottom: 24mm;
+  border: 1px solid var(--line-soft);
+}
+.backcover-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.backcover-credits {
+  width: 100%;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+  letter-spacing: 6px;
+  line-height: 2.4;
+  margin-bottom: 16mm;
+}
+.backcover-credits .credit-item {
+  display: inline-block;
+  margin: 0 8px;
+}
+.backcover-credits .role {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.65rem;
+  color: var(--ink-light);
+  letter-spacing: 3px;
+  display: block;
+  margin-top: 2px;
+}
+.backcover-credits .name {
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 1.3rem;
+  color: var(--vermillion);
+  letter-spacing: 4px;
+}
+.backcover-bottom {
+  width: 100%;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  letter-spacing: 3px;
+}
+.backcover-bottom .big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: var(--ink);
+  letter-spacing: 4px;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+/* 螢光筆效果（用於強調） */
+.mark {
+  background: linear-gradient(180deg, transparent 60%, rgba(184,135,90,0.3) 60%);
+  padding: 0 2px;
+}
+
+/* 章節小標 */
+.section-sub {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.7rem;
+  color: var(--vermillion);
+  letter-spacing: 4px;
+  margin: 18px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--line);
+}
+
+/* 對話氣泡（用於散文中的「建議」引言） */
+.advice {
+  margin: 18px 0;
+  padding: 12px 16px;
+  background: rgba(184,51,43,0.05);
+  border-left: 3px solid var(--vermillion);
+  font-style: normal;
+}
+.advice .advice-q {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.7rem;
+  color: var(--vermillion);
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+}
+
+/* 全頁跳轉/分隔裝飾 */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 12px;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.divider .ornament {
+  font-family: 'Ma Shan Zheng', serif;
+  color: var(--vermillion);
+  font-size: 1rem;
+  letter-spacing: 8px;
+}
+
+@media (max-width: 800px) {
+  .page { width: 100%; min-height: auto; }
+  .article { grid-template-columns: 1fr; }
+  .ending-body { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="magazine">
+
+<!-- ============================== P1 封面 ============================== -->
+<div class="page cover">
+  <div class="cover-photo">
+    <img src="https://www.coze.cn/s/oxy0gKn3OSE/" alt="西園寺白貓">
+  </div>
+  <div class="cover-title-block">
+    <div class="cover-mag-name">SUZHOU <span class="dot">·</span> TRAVELOGUE <span class="dot">·</span> 貓之城</div>
+    <div class="cover-title">貓走過的<br>腳印</div>
+    <div class="cover-subtitle">記一次蘇州之旅，與四個人的聲音</div>
+    <div class="cover-meta">
+      <div>
+        <div>老迪 攝 · 二〇二六</div>
+        <div style="margin-top:4px;">蘇州六日五夜 · 05.24 — 05.30</div>
+      </div>
+      <div class="vol">Vol. 壹</div>
+    </div>
+  </div>
+  <div class="page-num right">— 01 —</div>
+</div>
+
+<!-- ============================== P2 卷首語 ============================== -->
+<div class="page">
+  <div class="page-inner">
+    <div class="preface">
+      <div class="preface-head">
+        <div class="label">PREFACE · 卷首</div>
+        <div class="label-cn">— 關於這本小誌 —</div>
+      </div>
+
+      <div class="preface-photo">
+        <img src="https://www.coze.cn/s/f6_Q6Earkh4/" alt="寒山寺的睡貓">
+      </div>
+
+      <div class="preface-quote">
+        專案結束的那天，我把最後一行文字標上句點，<br>
+        忽然想起那隻貓——<br>
+        牠臥在青石板上，<span class="em">僧人走過，遊客走過，牠都沒有動。</span>
+      </div>
+
+      <div class="preface-quote">
+        有那麼一刻，我覺得我們都像那隻貓，<br>
+        在這場名為「蘇州」的故事裡，<br>
+        各自安靜地佔著一個位置，<br>
+        然後，一起完成了什麼。
+      </div>
+
+      <div class="preface-pull">不是結束，是另一場相遇的開始。</div>
+
+      <div class="preface-by">
+        寫於卷首
+        <span class="signature">小清</span>
+      </div>
+    </div>
+  </div>
+  <div class="page-num left">— 02 —</div>
+</div>
+
+<!-- ============================== P3 小迪 ============================== -->
+<div class="page">
+  <div class="page-inner">
+    <div class="article full-image-left">
+      <div class="article-head">
+        <div class="ch">壹</div>
+        <div class="info">
+          <div class="name">小迪</div>
+          <div class="role">掌舵的人 · 專案總負責</div>
+        </div>
+        <div class="saying">他說：</div>
+      </div>
+
+      <div class="article-portrait">
+        <img src="https://s.coze.cn/image/UJwh7hhj3vk/" alt="小迪 · 講話中">
+      </div>
+
+      <div class="article-prose">
+        <p>「第一次帶這麼多人做一個完整的專案，」小迪說這話的時候，語氣裡還有點不可思議。</p>
+
+        <p>做為總負責人，他是那個把大家的節奏兜在一起的人。照片要整理、文案要對照片、排版要對文案、最後還要部署上線——一環扣一環，<span class="em">哪個環節慢了，後面的人都得等</span>。</p>
+
+        <div class="pull-quote">一個想法從零變成看得見的網頁——這些看不見的細節，加起來就是一個作品的溫度。</div>
+
+        <div class="advice">
+          <div class="advice-q">▎ 給老迪的建議</div>
+          <p style="text-indent:0; margin:0;">「下次出門玩，能不能多寫點筆記？很多細節你當時覺得沒什麼，事後寫文案的時候才發現是寶。還有啊，照片可以提前分類好，哪個園子哪張貓，我們後面的人能省不少力氣。」</p>
+        </div>
+
+        <p>他停了一下，又補了一句：<br>「不過話說回來，<span class="soft">正是因為你沒寫，我們才有了更多想像空間——也說不定。</span>」</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num right">— 03 —</div>
+</div>
+
+<!-- ============================== P4 小美 ============================== -->
+<div class="page">
+  <div class="page-inner">
+    <div class="article full-image-right">
+      <div class="article-head">
+        <div class="ch">貳</div>
+        <div class="info">
+          <div class="name">小美</div>
+          <div class="role">把故事排成風景的人 · 設計</div>
+        </div>
+        <div class="saying">她說：</div>
+      </div>
+
+      <div class="article-portrait">
+        <img src="https://s.coze.cn/image/F34OnbsY6RQ/" alt="小美 · 講設計中">
+      </div>
+
+      <div class="article-prose two-col">
+        <p>小美是最安靜的那個。大部分時候她都在默默調整照片的邊框、對齊文字的基線、調整陰影的透明度。</p>
+
+        <p>「這是我第一次做旅行主題的網頁排版，」她說，「以前做的都是產品頁、活動頁，講究資訊清晰、重點突出。<span class="em">但旅行筆記不一樣——它要慢、要鬆、要能讓人一頁一頁翻下去，像真的在走路一樣。</span>」</p>
+
+        <div class="pull-quote" style="column-span: all;">什麼都不用說，照片自己會說話。</div>
+
+        <div class="advice" style="column-span: all;">
+          <div class="advice-q">▎ 給老迪的建議</div>
+          <p style="text-indent:0; margin:0;">「照片拍得真好，真的。特別是有幾張構圖，像畫一樣。但如果下次能多一點橫幅的照片就好了，網頁是寬的，直幅照片有時候會比較難安排。</p>
+          <p style="text-indent:0; margin:6px 0 0 0;">還有……可以多拍一點細節嗎？比如地上的落葉、牆上的苔蘚、茶杯的蒸氣——這些小東西，是最能讓人有感覺的。<span class="em">你不說，我可能永遠不會知道，那天的風是什麼味道。</span>」</p>
+        </div>
+
+        <p>她說完不好意思地笑了笑：<br>「啊，還有……下次能多給點貓嗎？貓真的很好排。」</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num left">— 04 —</div>
+</div>
+
+<!-- ============================== P5 小馬 ============================== -->
+<div class="page">
+  <div class="page-inner">
+    <div class="article full-image-left">
+      <div class="article-head">
+        <div class="ch">參</div>
+        <div class="info">
+          <div class="name">小馬</div>
+          <div class="role">最後把關的人 · 內容審核</div>
+        </div>
+        <div class="saying">他說：</div>
+      </div>
+
+      <div class="article-portrait">
+        <img src="https://s.coze.cn/image/o0Cd2nP9mx8/" alt="小馬 · 端咖啡推眼鏡">
+      </div>
+
+      <div class="article-prose">
+        <p>小馬是中途加入的，那時候專案已經進行了一大半。他的角色是內容審核，負責把關真實性、確認沒有錯誤。</p>
+
+        <p>「我其實一開始有點擔心，」他坦言，「旅行筆記這種東西，難免會有一些藝術加工。<span class="em">但老迪很堅持真實，這點我很佩服。</span>」</p>
+
+        <div class="pull-quote">真實是底線，也是最動人的東西。</div>
+
+        <div class="advice">
+          <div class="advice-q">▎ 給老迪的建議</div>
+          <p style="text-indent:0; margin:0;">「希望下次旅行的時候，可以記一下每天的行程，不用太詳細，幾個關鍵字就好。比如『上午拙政園，人很多，有個亭子很舒服』，這樣寫文案的人不會憑空猜，也不會寫錯。」</p>
+          <p style="text-indent:0; margin:6px 0 0 0;">還有啊，」他補了一句，聲音帶著笑意，<br>「<span class="em">松子糖那個故事很棒。</span><br>多一點這種真人真事的小故事，<br>比任何華麗的辭藻都動人。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num right">— 05 —</div>
+</div>
+
+<!-- ============================== P6 小清 ============================== -->
+<div class="page">
+  <div class="page-inner">
+    <div class="article full-image-right">
+      <div class="article-head">
+        <div class="ch">肆</div>
+        <div class="info">
+          <div class="name">小清</div>
+          <div class="role">寫字的人 · 文案</div>
+        </div>
+        <div class="saying">她說：</div>
+      </div>
+
+      <div class="article-portrait">
+        <img src="https://s.coze.cn/image/AX62JcjQzv0/" alt="小清 · 分享閱讀中">
+      </div>
+
+      <div class="article-prose">
+        <p>至於我自己呢？</p>
+
+        <p>我想起第一天接這個案子的時候，心裡其實很忐忑。一堆照片、一個「貓」的意象，要把它們串成一個說得通的故事——說起來容易，做起來難。</p>
+
+        <div class="pull-quote">最棒的故事從來不是編出來的，是從照片裡「看出來」的。</div>
+
+        <p>看那隻貓的姿態、看僧人走過的腳步、看楓橋邊的夕陽、看一碗螺螄粉冒著的熱氣——這些畫面本身就在說話，我只是把它們翻譯成文字而已。</p>
+
+        <div class="pull-quote">好的旅行文學，不是寫你去了哪裡，是寫你在那裡，感受到了什麼。</div>
+
+        <div class="advice">
+          <div class="advice-q">▎ 給老迪的建議</div>
+          <p style="text-indent:0; margin:0;">我想了很久。</p>
+          <p style="text-indent:0; margin:6px 0 0 0;">「下次旅行，帶個小本子吧。不用寫很多，每天睡前寫三句話就好。今天印象最深的一個畫面、一個聲音、一個味道。<span class="em">這些東西，時間一久就會忘，但寫下來了，就是一輩子的。</span></p>
+          <p style="text-indent:0; margin:6px 0 0 0;">還有……」我停了停，「下次再去什麼地方，<span class="em">還要找我們一起。</span>一個人看風景，和四個人一起做一個關於風景的作品，感覺，真的不一樣。」</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num left">— 06 —</div>
+</div>
+
+<!-- ============================== P7 尾聲 ============================== -->
+<div class="page">
+  <div class="page-inner">
+    <div class="ending">
+      <div class="ending-head">EPILOGUE · 尾聲</div>
+
+      <div class="ending-body">
+        <div class="ending-photo">
+          <img src="https://www.coze.cn/s/gtpPvvWNoMA/" alt="吳中第一山 · 一個女孩坐在塔前">
+        </div>
+
+        <div class="ending-prose">
+          <p>專案結束了，但蘇州的記憶還在。那些貓、那些園子、那些橋、那些船，都以某種方式留在了那個網頁裡，也留在了我們每個人心裡。</p>
+
+          <p>就像結尾寫的那樣：<br>「<span class="em">不是結束，是另一場相遇的開始。</span>」</p>
+
+          <p>我們因為一場關於蘇州的旅行聚在一起，然後，又會因為下一個什麼故事，再次啟程。</p>
+
+          <p>這樣挺好的。像貓一樣，慢慢走，到處看看，遇見喜歡的風景，就多停留一會兒。</p>
+
+          <p class="gold-line">最好的風景從來不是用來抵達的，<br>是用來——<br>一起走過的。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num right">— 07 —</div>
+</div>
+
+<!-- ============================== P8 封底 ============================== -->
+<div class="page">
+  <div class="page-inner">
+    <div class="backcover">
+      <div class="backcover-top">
+        <div class="label">END · 完</div>
+        <div class="mag-name">貓走過的腳印</div>
+      </div>
+
+      <div class="backcover-photo">
+        <img src="https://www.coze.cn/s/R4laGPWEP-o/" alt="金雞湖落日餘暉">
+      </div>
+
+      <div class="backcover-credits">
+        <span class="credit-item">
+          <span class="role">攝影</span>
+          <span class="name">老迪</span>
+        </span>
+        <span class="credit-item">·</span>
+        <span class="credit-item">
+          <span class="role">編輯</span>
+          <span class="name">小迪</span>
+        </span>
+        <span class="credit-item">·</span>
+        <span class="credit-item">
+          <span class="role">設計</span>
+          <span class="name">小美</span>
+        </span>
+        <span class="credit-item">·</span>
+        <span class="credit-item">
+          <span class="role">文</span>
+          <span class="name">小清</span>
+        </span>
+        <span class="credit-item">·</span>
+        <span class="credit-item">
+          <span class="role">審</span>
+          <span class="name">小馬</span>
+        </span>
+      </div>
+
+      <div class="backcover-bottom">
+        <div class="big">Suzhou · 2026</div>
+        <div>蘇州六日五夜 · 2026.05.24 — 05.30</div>
+        <div style="margin-top:6px; color: var(--ink-light); font-size: 0.6rem;">本期完 · 下一期再見</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num left">— 08 —</div>
+</div>
+
+</div>
+</body>
+</html>
